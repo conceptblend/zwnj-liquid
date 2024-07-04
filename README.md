@@ -7,3 +7,5 @@ the clipboard for you. By default, it wraps it in Liquid/DotLiquid <code>{%raw%}
 it's traceable in a text editor.
 
 _Why would I do this?_ - You can use it to force an SMS to upgrade from GSM-7 to UCS-8!
+
+Results can verifed using [Twilio's Message Segment Calculator](https://twiliodeved.github.io/message-segment-calculator/).
