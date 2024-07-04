@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;" />
+    <link href="https://unpkg.com/cirrus-ui" type="text/css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <title>Copy &amp;zwnj; to the clipboard</title>
+  </head>
+  <body>
+    <div class="u-flex u-center h-100p min-w-xs max-w-xs">
+      <div class="frame u-flex u-flex-column px-3 py-4 min-w-xs">
+        <form id="builder">
+          <h3>🪄 Magic characters</h3>
+          <p>
+            This little tool will put an invisible character called a zero-width non-joiner <code>&amp;zwnj;</code> into
+            the clipboard for you. By default, it wraps it in Liquid/DotLiquid <code>{%raw%}{%endraw%}</code> tags so
+            it's traceable in a text editor.
+          </p>
+          <p>
+            <em>Why would I do this?</em>&nbsp;-&nbsp;You can use it to force an SMS to upgrade from GSM-7 to UCS-8!
+          </p>
+          <div class="divider"></div>
+          <div>
+            <label for="liquidWrap"
+              ><small>
+                <input type="checkbox" id="liquidWrap" name="liquidWrap" checked />
+                Wrap with <code>{%raw%}</code> tags for Liquid/DotLiquid
+              </small>
+            </label>
+          </div>
+          <button type="submit" class="btn-link btn--sm w-100p my-1" id="clip">Copy to clipboard</button>
+          <pre><code id="output" class="u-text-break u-none mt-2 mb-1"></code></pre>
+        </form>
+      </div>
+    </div>
+    <script>
+      const cb = document.getElementById("clip");
+      const o = document.getElementById("output");
+
+      document.getElementById("builder").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = Object.fromEntries(new FormData(e.target));
+
+        // alt: "&#8203;"
+        let result = "&zwnj;";
+        if (formData.liquidWrap) result = `{%raw%}${result}{%endraw%}`;
+
+        /* Awkward render to page so I can get the textContent with the encoded HTML entities */
+        o.innerHTML = result;
+
+        navigator.clipboard.writeText(o.innerText).then(
+          () => {
+            /* clipboard successfully set */
+            alert("Magic characters copied to clipboard!");
+          },
+          () => {
+            /* clipboard write failed */
+            alert("An error occurred and characters were not copied.");
+          }
+        );
+      });
+    </script>
+  </body>
+</html>
